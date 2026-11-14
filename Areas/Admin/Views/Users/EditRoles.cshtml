@@ -1,0 +1,31 @@
+@model WoodHome.Areas.Admin.Controllers.EditUserRolesViewModel
+@{
+    ViewData["Title"] = "Изменение ролей";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="auth-card">
+                <h3 class="mb-4">Роли для @Model.Email</h3>
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="userId" value="@Model.UserId" />
+                    
+                    @foreach (var role in Model.AllRoles)
+                    {
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="selectedRoles" value="@role" 
+                                   @(Model.UserRoles.Contains(role) ? "checked" : "") />
+                            <label class="form-check-label">@role</label>
+                        </div>
+                    }
+
+                    <button type="submit" class="btn-gold w-100 mt-3">Сохранить роли</button>
+                    <a href="/Admin/Users" class="btn-outline-gold w-100 mt-2 d-block text-center">Назад</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

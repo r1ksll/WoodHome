@@ -1,0 +1,64 @@
+@model IEnumerable<WoodHome.Domain.Entities.Review>
+@{
+    ViewData["Title"] = "Модерация отзывов";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title">Отзывы</h2>
+        <a href="/Admin/Dashboard" class="btn-outline-gold">Назад в панель</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Автор</th>
+                    <th>Оценка</th>
+                    <th>Текст</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.AuthorName</td>
+                        <td>
+                            @for (int i = 0; i < item.Rating; i++)
+                            {
+                                <span class="text-gold">★</span>
+                            }
+                        </td>
+                        <td>@item.Text</td>
+                        <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            @if (item.IsApproved)
+                            {
+                                <span class="badge bg-success">Одобрен</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">На модерации</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.IsApproved)
+                            {
+                                <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Одобрить</button>
+                                </form>
+                            }
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Удалить отзыв?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,434 @@
+﻿
+@model WoodHome.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "Главная";
+    var slide = Model.Slides.FirstOrDefault();
+}
+
+
+<section class="hero-section">
+
+    @if (Model.Slides.Any())
+    {
+        <div id="heroCarousel"
+             class="carousel slide carousel-fade hero-carousel"
+             data-bs-ride="carousel"
+             data-bs-interval="5000">
+
+            <div class="carousel-indicators">
+                @for (int i = 0; i < Model.Slides.Count; i++)
+                {
+                    <button type="button"
+                            data-bs-target="#heroCarousel"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")"
+                            aria-label="Слайд @(i + 1)"
+                            aria-current="@(i == 0 ? "true" : "false")">
+                    </button>
+                }
+            </div>
+
+            <div class="carousel-inner">
+
+                @for (int i = 0; i < Model.Slides.Count; i++)
+                {
+                    var currentSlide = Model.Slides[i];
+
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                        <div class="hero-slide"
+                             style="background-image: url('@currentSlide.ImagePath')">
+
+                            <div class="hero-overlay"></div>
+
+                            <div class="container hero-content">
+
+                                <div class="hero-label">
+                                    <span></span>
+                                    КОМПЛЕКСНОЕ СТРОИТЕЛЬСТВО ДЕРЕВЯННЫХ ДОМОВ
+                                </div>
+
+                                <h1>
+                                    @currentSlide.Title
+                                </h1>
+
+                                <p class="hero-description">
+                                    @(currentSlide.Subtitle ??
+                                        "Создаём деревянные дома для комфортной жизни. От разработки проекта до полного воплощения вашей мечты.")
+                                </p>
+
+                                <div class="hero-buttons">
+                                    <a href="@(currentSlide.ButtonUrl ?? "#services")"
+                                       class="gold-button">
+                                        @(currentSlide.ButtonText ?? "Наши услуги")
+                                        <span>→</span>
+                                    </a>
+
+                                    <a href="#about" class="outline-button">
+                                        О компании
+                                    </a>
+                                </div>
+
+                                <div class="hero-note">
+                                    <span class="hero-line"></span>
+                                    КАЧЕСТВО · НАДЁЖНОСТЬ · ЕСТЕСТВЕННОСТЬ
+                                </div>
+
+                            </div>
+
+                            <div class="hero-bottom">
+                                <span>WOODHOME</span>
+                                <span>@(i + 1.ToString("D2")) / @Model.Slides.Count.ToString("D2")</span>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#heroCarousel"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"
+                      aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий слайд</span>
+            </button>
+
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#heroCarousel"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon"
+                      aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий слайд</span>
+            </button>
+
+        </div>
+    }
+    else
+    {
+        <div class="hero-slide"
+             style="background-image: url('/img/optimized/slide-1.jpg')">
+
+            <div class="hero-overlay"></div>
+
+            <div class="container hero-content">
+                <div class="hero-label">
+                    <span></span>
+                    КОМПЛЕКСНОЕ СТРОИТЕЛЬСТВО ДЕРЕВЯННЫХ ДОМОВ
+                </div>
+
+                <h1>Дом, в котором живёт душа</h1>
+
+                <p class="hero-description">
+                    Создаём деревянные дома для комфортной жизни.
+                    От разработки проекта до полного воплощения вашей мечты.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#services" class="gold-button">Наши услуги <span>→</span></a>
+                    <a href="#about" class="outline-button">О компании</a>
+                </div>
+
+                <div class="hero-note">
+                    <span class="hero-line"></span>
+                    КАЧЕСТВО · НАДЁЖНОСТЬ · ЕСТЕСТВЕННОСТЬ
+                </div>
+            </div>
+
+            <div class="hero-bottom">
+                <span>WOODHOME</span>
+                <span>01 / 01</span>
+            </div>
+        </div>
+    }
+
+</section>
+
+
+
+<section class="home-section" id="about">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-label">О НАШЕЙ КОМПАНИИ</span>
+
+            <h2>
+                @(Model.Company?.CompanyName ?? "Создаём дома")
+                <span>на поколения</span>
+            </h2>
+        </div>
+
+        <div class="about-content">
+            <div class="about-text">
+                <p>
+                    @(Model.Company?.ShortDescription ??
+                        "WoodHome — компания, специализирующаяся на комплексном строительстве деревянных домов.")
+                </p>
+
+                <p>
+                    @(Model.Company?.Description ??
+                        "Мы объединяем современные строительные технологии, качественные материалы и внимание к каждой детали, чтобы создавать надёжные и уютные пространства для жизни.")
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Company?.Mission))
+                {
+                    <p>@Model.Company.Mission</p>
+                }
+
+                @if (Model.Company != null && Model.Company.ExperienceYears > 0)
+                {
+                    <p>
+                        Более @Model.Company.ExperienceYears лет опыта
+                        в строительстве деревянных домов.
+                    </p>
+                }
+
+                <a asp-controller="Home" asp-action="CompanyInfo" class="text-link">
+                    Подробнее о компании →
+                </a>
+            </div>
+
+            <div class="about-features">
+                <div class="feature-item">
+                    <span>01</span>
+                    <div>
+                        <h3>Качество материалов</h3>
+                        <p>Подбираем материалы с учётом требований проекта.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>02</span>
+                    <div>
+                        <h3>Комплексный подход</h3>
+                        <p>Сопровождаем строительство на всех этапах.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>03</span>
+                    <div>
+                        <h3>Индивидуальные проекты</h3>
+                        <p>Учитываем пожелания и потребности заказчика.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="home-section services-section" id="services">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-label">ЧТО МЫ ПРЕДЛАГАЕМ</span>
+            <h2>Наши <span>услуги</span></h2>
+            <p>Комплексные решения для строительства вашего будущего дома.</p>
+        </div>
+
+        <div class="row g-4">
+            @if (Model.Services.Any())
+            {
+                @foreach (var service in Model.Services.Take(6))
+                {
+                    <div class="col-md-4">
+                        <div class="service-card">
+                            <span class="service-number">
+                                @service.Id.ToString("D2")
+                            </span>
+
+                            <div class="service-icon">⌂</div>
+
+                            <h3>@service.Title</h3>
+
+                            <p>
+                                @(service.ShortDescription ?? service.Description)
+                            </p>
+
+                            <a asp-controller="Home" asp-action="Services">
+                                Подробнее →
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p>Информация об услугах скоро появится.</p>
+                </div>
+            }
+        </div>
+
+        <div class="section-more">
+            <a asp-controller="Home" asp-action="Services" class="text-link">
+                Все услуги →
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Портфолио -->
+<section class="home-section portfolio-section" id="portfolio">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-label">НАШИ РАБОТЫ</span>
+            <h2>Проекты, созданные <span>с душой</span></h2>
+            <p>Каждый дом — результат продуманного проекта и качественной работы.</p>
+        </div>
+
+        <div class="row g-4">
+            @if (Model.Projects.Any())
+            {
+                @foreach (var project in Model.Projects.Take(3))
+                {
+                    var projectPhoto = project.MainPhoto
+                        ?? project.Images.FirstOrDefault()?.ImagePath;
+
+                    <div class="col-md-4">
+                        <div class="portfolio-card">
+                            @if (!string.IsNullOrWhiteSpace(projectPhoto))
+                            {
+                                <img src="@projectPhoto"
+                                     alt="@project.Title"
+                                     class="portfolio-image" />
+                            }
+
+                            <div class="portfolio-card-content">
+                                <h3>@project.Title</h3>
+
+                                @if (!string.IsNullOrWhiteSpace(project.ShortDescription))
+                                {
+                                    <p>@project.ShortDescription</p>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(project.Area))
+                                {
+                                    <p>Площадь: @project.Area</p>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(project.ConstructionTime))
+                                {
+                                    <p>Срок строительства: @project.ConstructionTime</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="portfolio-placeholder">
+                        <div>
+                            <span>WOODHOME / PORTFOLIO</span>
+
+                            <h3>
+                                Здесь будут представлены<br />
+                                наши построенные дома
+                            </h3>
+
+                            <p>
+                                Фотографии и характеристики реализованных проектов.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="section-more">
+            <a asp-controller="Home" asp-action="Portfolio" class="text-link">
+                Смотреть все проекты →
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Отзывы -->
+<section class="home-section reviews-section" id="reviews">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-label">МНЕНИЕ НАШИХ КЛИЕНТОВ</span>
+            <h2>Нам <span>доверяют</span></h2>
+            <p>Для нас важен результат и впечатления каждого заказчика.</p>
+        </div>
+
+        <div class="row g-4">
+            @if (Model.Reviews.Any())
+            {
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="col-md-4">
+                        <div class="review-card">
+                            <div class="review-stars">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <span>★</span>
+                                }
+                            </div>
+
+                            <p>@review.Text</p>
+
+                            <h3>@review.AuthorName</h3>
+
+                            <span class="review-date">
+                                @review.CreatedAt.ToString("dd.MM.yyyy")
+                            </span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="review-placeholder">
+                        <div class="review-stars">★★★★★</div>
+
+                        <h3>Отзывы наших клиентов</h3>
+
+                        <p>
+                            Здесь будут размещаться отзывы о работе компании
+                            после проверки и одобрения модератором.
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="section-more">
+            <a asp-controller="Home" asp-action="Reviews" class="text-link">
+                Все отзывы →
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Призыв к обращению -->
+<section class="contact-cta" id="contact">
+    <div class="container">
+        <span class="section-label">
+            ВАШ БУДУЩИЙ ДОМ НАЧИНАЕТСЯ ЗДЕСЬ
+        </span>
+
+        <h2>
+            Давайте обсудим<br />
+            <span>ваш проект</span>
+        </h2>
+
+        <p>
+            Свяжитесь с нами, чтобы обсудить строительство
+            деревянного дома и получить консультацию менеджера.
+        </p>
+
+        <a asp-controller="Home" asp-action="Contacts" class="gold-button">
+            Связаться с нами →
+        </a>
+    </div>
+</section>

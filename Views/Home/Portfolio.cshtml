@@ -1,0 +1,143 @@
+
+@model IEnumerable<WoodHome.Domain.Entities.Project>
+
+@{
+    ViewData["Title"] = "Портфолио";
+}
+
+<section class="portfolio-page">
+
+    <div class="portfolio-page-heading">
+        <div class="container">
+            <span class="section-subtitle">НАШИ РАБОТЫ</span>
+            <h1>Наши проекты</h1>
+            <p>
+                Каждый дом WoodHome — это сочетание природной красоты,
+                продуманной архитектуры и качества исполнения.
+            </p>
+        </div>
+    </div>
+
+    <div class="container portfolio-page-content">
+
+        <div class="portfolio-intro">
+            <h2>Дома, созданные для жизни</h2>
+            <p>
+                Представляем проекты деревянных домов, в которых
+                каждая деталь продумана для комфорта и уюта.
+            </p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="portfolio-page-grid">
+
+                @foreach (var project in Model)
+                {
+                    var photo = project.MainPhoto
+                        ?? project.Images.FirstOrDefault()?.ImagePath;
+
+                    <article class="portfolio-project-card">
+
+                        <div class="portfolio-project-image">
+                            @if (!string.IsNullOrEmpty(photo))
+                            {
+                                <img src="@photo"
+                                     alt="@project.Title"
+                                     loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="portfolio-no-image">
+                                    WOODHOME
+                                </div>
+                            }
+
+                            @if (project.IsFeatured)
+                            {
+                                <span class="portfolio-featured">
+                                    Избранный проект
+                                </span>
+                            }
+                        </div>
+
+                        <div class="portfolio-project-info">
+
+                            <h3>@project.Title</h3>
+
+                            @if (!string.IsNullOrWhiteSpace(project.ShortDescription))
+                            {
+                                <p class="portfolio-project-description">
+                                    @project.ShortDescription
+                                </p>
+                            }
+
+                            <div class="portfolio-project-details">
+
+                                @if (!string.IsNullOrWhiteSpace(project.Area))
+                                {
+                                    <div>
+                                        <span>ПЛОЩАДЬ</span>
+                                        <strong>@project.Area</strong>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(project.ConstructionTime))
+                                {
+                                    <div>
+                                        <span>СРОК СТРОИТЕЛЬСТВА</span>
+                                        <strong>@project.ConstructionTime</strong>
+                                    </div>
+                                }
+
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(project.Description))
+                            {
+                                <details class="portfolio-project-more">
+                                    <summary>Подробнее о проекте</summary>
+                                    <p>@project.Description</p>
+                                </details>
+                            }
+
+                            <a asp-controller="Home"
+                               asp-action="Contacts"
+                               class="portfolio-project-link">
+                                Обсудить похожий проект
+                                <span>→</span>
+                            </a>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="portfolio-empty">
+                <h3>Скоро здесь появятся наши проекты</h3>
+                <p>Мы готовим для вас подборку реализованных домов.</p>
+            </div>
+        }
+
+    </div>
+
+    <section class="portfolio-bottom">
+        <div class="container">
+            <span class="section-subtitle">ВАШ БУДУЩИЙ ДОМ</span>
+            <h2>Создадим проект специально для вас</h2>
+            <p>
+                Расскажите нам о своих пожеланиях, и мы поможем
+                воплотить идею деревянного дома в жизнь.
+            </p>
+            <a asp-controller="Home"
+               asp-action="Contacts"
+               class="btn-gold">
+                Оставить заявку
+            </a>
+        </div>
+    </section>
+
+</section>

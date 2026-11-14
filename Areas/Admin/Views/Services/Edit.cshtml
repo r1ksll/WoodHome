@@ -1,0 +1,59 @@
+@model WoodHome.Domain.Entities.Service
+@{
+    ViewData["Title"] = "Редактировать услугу";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="auth-card">
+                <h3 class="mb-4">Редактировать услугу</h3>
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Photo" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Название</label>
+                        <input asp-for="Title" class="form-control" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Краткое описание</label>
+                        <input asp-for="ShortDescription" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Полное описание</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Категория</label>
+                        <select asp-for="ServiceCategoryId" class="form-control" 
+                                asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Текущее фото</label>
+                        @if (!string.IsNullOrEmpty(Model.Photo))
+                        {
+                            <div><img src="@Model.Photo" style="max-height: 100px;" /></div>
+                        }
+                        <input asp-for="UploadedImage" type="file" class="form-control mt-2" accept="image/*" />
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+    <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+    <label asp-for="IsActive" class="form-check-label">Активна (показывать на сайте)</label>
+</div>
+
+                    <button type="submit" class="btn-gold w-100">Сохранить изменения</button>
+                    <a href="/Admin/Services" class="btn-outline-gold w-100 mt-2 d-block text-center">Назад к списку</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

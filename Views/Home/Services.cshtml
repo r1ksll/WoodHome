@@ -1,0 +1,165 @@
+@model IEnumerable<WoodHome.Domain.Entities.ServiceCategory>
+
+@{
+    ViewData["Title"] = "Услуги";
+}
+
+<section class="services-page">
+    <div class="container">
+
+        <div class="services-heading">
+            <span class="section-label">ЧТО МЫ ПРЕДЛАГАЕМ</span>
+            <h1 class="page-title">Наши услуги</h1>
+            <p class="services-intro">
+                Полный цикл строительства деревянных домов —
+                от разработки проекта до финальной отделки.
+            </p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="filter-buttons mb-5">
+                <button class="btn-filter active" data-filter="all">Все услуги</button>
+                @foreach (var cat in Model)
+                {
+                    <button class="btn-filter" data-filter="@cat.Id">@cat.Name</button>
+                }
+            </div>
+
+            <div class="services-category-grid">
+
+                @foreach (var category in Model)
+                {
+                    var activeServices = category.Services?
+                        .Where(s => s.IsActive)
+                        .ToList() ?? new List<WoodHome.Domain.Entities.Service>();
+
+                    <section class="service-category-block" data-category="@category.Id">
+
+                        <div class="category-heading">
+                            <span class="category-label">НАПРАВЛЕНИЕ</span>
+                            <h2 class="service-category-title">@category.Name</h2>
+
+                            @if (!string.IsNullOrWhiteSpace(category.Description))
+                            {
+                                <p class="service-category-description">
+                                    @category.Description
+                                </p>
+                            }
+                        </div>
+
+                        @if (activeServices.Any())
+                        {
+                            <div class="service-items-grid">
+
+                                @foreach (var service in activeServices)
+                                {
+                                    <article class="service-item-card">
+
+                                        @if (!string.IsNullOrWhiteSpace(service.Photo))
+                                        {
+                                            <div class="service-item-image">
+                                                <img src="@service.Photo"
+                                                     alt="@service.Title" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="service-item-image service-item-placeholder">
+                                                <span>WOODHOME</span>
+                                            </div>
+                                        }
+
+                                        <div class="service-item-content">
+                                            <h3 class="service-item-title">
+                                                @service.Title
+                                            </h3>
+
+                                            @if (!string.IsNullOrWhiteSpace(service.ShortDescription))
+                                            {
+                                                <p class="service-item-description">
+                                                    @service.ShortDescription
+                                                </p>
+                                            }
+                                            else if (!string.IsNullOrWhiteSpace(service.Description))
+                                            {
+                                                <p class="service-item-description">
+                                                    @service.Description
+                                                </p>
+                                            }
+
+                                            <a asp-controller="Home"
+                                               asp-action="Contacts"
+                                               class="service-item-link">
+                                                Оставить заявку <span>→</span>
+                                            </a>
+                                        </div>
+
+                                    </article>
+                                }
+
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="services-empty">
+                                Услуги в этой категории пока не добавлены.
+                            </p>
+                        }
+
+                    </section>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="services-empty">
+                Категории услуг пока не добавлены.
+            </div>
+        }
+
+        <div class="services-page-bottom">
+            <div>
+                <span class="section-label">ВАШ БУДУЩИЙ ДОМ НАЧИНАЕТСЯ ЗДЕСЬ</span>
+                <h2>Обсудим ваш проект?</h2>
+                <p>
+                    Расскажите нам о своих идеях, и мы поможем воплотить их в жизнь.
+                </p>
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Contacts"
+               class="gold-button">
+                Связаться с нами <span>→</span>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterButtons = document.querySelectorAll('.btn-filter');
+            const categoryBlocks = document.querySelectorAll('.service-category-block');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filterValue = this.getAttribute('data-filter');
+
+                    categoryBlocks.forEach(block => {
+                        if (filterValue === 'all' || block.getAttribute('data-category') === filterValue) {
+                            block.style.display = 'block';
+                        } else {
+                            block.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

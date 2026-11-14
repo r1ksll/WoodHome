@@ -1,0 +1,81 @@
+@model WoodHome.Domain.Entities.CompanyInfo
+@{
+    ViewData["Title"] = "О компании";
+}
+
+<section class="home-section" style="padding-top: 120px; min-height: 80vh;">
+    <div class="container">
+        
+        
+        <div class="section-heading">
+            <span class="section-label">О НАШЕЙ КОМПАНИИ</span>
+            <h2>
+                @(Model?.CompanyName ?? "Создаём дома")
+                <span>на поколения</span>
+            </h2>
+        </div>
+
+        <div class="about-content">
+          
+            <div class="about-text">
+                <p>
+                    @(Model?.ShortDescription ?? "WoodHome — компания, специализирующаяся на комплексном строительстве деревянных домов.")
+                </p>
+
+                <p>
+                    @(Model?.Description ?? "Мы объединяем современные строительные технологии, качественные материалы и внимание к каждой детали, чтобы создавать надёжные и уютные пространства для жизни.")
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(Model?.Mission))
+                {
+                    <p style="color: var(--gold); font-style: italic;">
+                        @Model.Mission
+                    </p>
+                }
+
+                @if (Model != null && Model.ExperienceYears > 0)
+                {
+                    <p>
+                        Более @Model.ExperienceYears лет опыта
+                        в строительстве деревянных домов.
+                    </p>
+                }
+            </div>
+
+            
+            @if (!string.IsNullOrWhiteSpace(Model?.ImagePath))
+            {
+                <div class="about-image-wrapper" style="text-align: center;">
+                    <img src="@Model.ImagePath" alt="О компании" class="about-image" style="max-width: 100%; border-radius: 15px;" />
+                </div>
+            }
+
+            
+            <div class="about-features">
+                <div class="feature-item">
+                    <span>01</span>
+                    <div>
+                        <h3>Качество материалов</h3>
+                        <p>Подбираем материалы с учётом требований проекта.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>02</span>
+                    <div>
+                        <h3>Комплексный подход</h3>
+                        <p>Сопровождаем строительство на всех этапах.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span>03</span>
+                    <div>
+                        <h3>Индивидуальные проекты</h3>
+                        <p>Учитываем пожелания и потребности заказчика.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

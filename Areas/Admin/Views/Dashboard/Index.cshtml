@@ -1,0 +1,82 @@
+
+@{
+    ViewData["Title"] = "Админ-панель";
+    Layout = "/Views/Shared/_Layout.cshtml";
+
+    var isAdmin = User.IsInRole("Администратор");
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <h1 class="page-title mb-4">Панель управления</h1>
+
+    <div class="row g-4">
+
+        @if (isAdmin)
+        {
+            <div class="col-md-4">
+                <div class="admin-card">
+                    <h3>@ViewBag.TotalServices</h3>
+                    <p>Услуги</p>
+                    <a href="/Admin/Services" class="text-link">Управление →</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="admin-card">
+                    <h3>@ViewBag.TotalProjects</h3>
+                    <p>Портфолио</p>
+                    <a href="/Admin/Projects" class="text-link">Управление →</a>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-4">
+            <div class="admin-card">
+                <h3>@ViewBag.TotalReviews</h3>
+                <p>
+                    Отзывы
+                    <span class="text-warning">
+                        (@ViewBag.PendingReviews на модерации)
+                    </span>
+                </p>
+                <a href="/Admin/Reviews" class="text-link">Модерация →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="admin-card">
+                <h3>@ViewBag.TotalRequests</h3>
+                <p>Заявки клиентов</p>
+                <a href="/Admin/Requests" class="text-link">Просмотр →</a>
+            </div>
+        </div>
+
+        @if (isAdmin)
+        {
+            <div class="col-md-4">
+                <div class="admin-card">
+                    <h3>@ViewBag.TotalUsers</h3>
+                    <p>Пользователи</p>
+                    <a href="/Admin/Users" class="text-link">Управление →</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="admin-card">
+                    <h3>1</h3>
+                    <p>О компании</p>
+                    <a href="/Admin/Company/Edit" class="text-link">Редактировать →</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="admin-card">
+                    <h3>1</h3>
+                    <p>Настройки контактов</p>
+                    <a href="/Admin/ContactSettings/Index" class="text-link">Редактировать →</a>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

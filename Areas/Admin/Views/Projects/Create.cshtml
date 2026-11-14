@@ -1,0 +1,160 @@
+
+@model WoodHome.Models.ViewModels.ProjectFormViewModel
+
+@{
+    ViewData["Title"] = "Добавление проекта";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+
+    <div class="mb-4">
+        <span class="section-label">АДМИНИСТРИРОВАНИЕ</span>
+        <h1 class="page-title mb-2">Добавление проекта</h1>
+        <p class="text-muted">
+            Заполните информацию о выполненном проекте.
+        </p>
+    </div>
+
+    <div class="admin-project-form">
+
+        <form asp-area="Admin"
+              asp-controller="Projects"
+              asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
+
+            <div class="admin-form-section">
+                <h3>Основная информация</h3>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">
+                        Название проекта *
+                    </label>
+                    <input asp-for="Title"
+                           class="form-control"
+                           placeholder="Например, Загородный дом WoodHome" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ShortDescription" class="form-label">
+                        Краткое описание
+                    </label>
+                    <textarea asp-for="ShortDescription"
+                              class="form-control"
+                              rows="2"
+                              placeholder="Кратко расскажите о проекте"></textarea>
+                    <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">
+                        Полное описание
+                    </label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="5"
+                              placeholder="Подробная информация о проекте"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Area" class="form-label">
+                            Площадь
+                        </label>
+
+                        <div class="input-group">
+                            <input asp-for="Area"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   step="1"
+                                   placeholder="150" />
+                            <span class="input-group-text">м²</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ConstructionTime" class="form-label">
+                            Срок строительства
+                        </label>
+
+                        <div class="input-group">
+                            <input asp-for="ConstructionTime"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   step="1"
+                                   placeholder="8" />
+                            <span class="input-group-text">месяцев</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-form-section">
+                <h3>Главная фотография</h3>
+
+                <div class="mb-3">
+                    <label asp-for="MainPhotoFile" class="form-label">
+                        Фотография проекта *
+                    </label>
+
+                    <input asp-for="MainPhotoFile"
+                           type="file"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp" />
+
+                    <span asp-validation-for="MainPhotoFile"
+                          class="text-danger"></span>
+
+                    <small class="admin-form-hint">
+                        Форматы JPG, JPEG, PNG, WEBP.
+                        Максимальный размер — 10 МБ.
+                    </small>
+                </div>
+            </div>
+
+            <div class="admin-form-section">
+                <h3>Публикация</h3>
+
+                <div class="form-check mb-3">
+                    <input asp-for="IsFeatured"
+                           class="form-check-input" />
+                    <label asp-for="IsFeatured" class="form-check-label">
+                        Показывать проект как избранный
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="IsActive"
+                           class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">
+                        Опубликовать проект на сайте
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-form-actions">
+                <button type="submit" class="gold-button">
+                    Добавить проект
+                </button>
+
+                <a asp-area="Admin"
+                   asp-controller="Projects"
+                   asp-action="Index"
+                   class="admin-form-cancel">
+                    Отмена
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>

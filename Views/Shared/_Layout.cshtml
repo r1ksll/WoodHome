@@ -1,0 +1,177 @@
+﻿
+@using Microsoft.EntityFrameworkCore
+@inject WoodHome.Infrastructure.ApplicationDbContext DbContext
+
+@{
+    var companyInfo = await DbContext.CompanyInfos
+        .AsNoTracking()
+        .FirstOrDefaultAsync();
+
+    var phone = companyInfo?.Phone;
+
+    var phoneLink = phone?
+        .Replace(" ", "")
+        .Replace("(", "")
+        .Replace(")", "")
+        .Replace("-", "");
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — WoodHome</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WoodHome.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg custom-navbar">
+            <div class="container">
+
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="logo-icon">W</span>
+                    <div class="ms-3">
+                        <div class="logo-title">WOODHOME</div>
+                        <div class="logo-subtitle">СТРОИМ С ДУШОЙ</div>
+                    </div>
+                </a>
+
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false"
+                        aria-label="Открыть меню">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="CompanyInfo">О компании</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Services">Услуги</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Portfolio">Портфолио</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Reviews">Отзывы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Profile">Личный кабинет</a>
+
+                            @if (User.IsInRole("Администратор") || User.IsInRole("Менеджер"))
+                            {
+                                <a class="nav-link text-gold" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Админ-панель</a>
+                            }
+                        }
+                        else
+                        {
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Войти</a>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(phoneLink))
+                        {
+                            <a href="tel:@phoneLink" class="phone-button">
+                                Позвонить
+                                <span>↗</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-area="" asp-controller="Home" asp-action="Contacts" class="phone-button">
+                                Контакты
+                                <span>↗</span>
+                            </a>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="custom-footer">
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+
+                <div class="col-lg-4">
+                    <a class="footer-brand" asp-controller="Home" asp-action="Index">
+                        <span class="logo-icon">W</span>
+                        <span class="footer-brand-name">WOODHOME</span>
+                    </a>
+                    <p class="footer-description">
+                        Строим деревянные дома, в которых хочется жить.
+                    </p>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="footer-links">
+                        <a asp-controller="Home" asp-action="Index">Главная</a>
+                        <a asp-controller="Home" asp-action="CompanyInfo">О компании</a>
+                        <a asp-controller="Home" asp-action="Services">Услуги</a>
+                        <a asp-controller="Home" asp-action="Portfolio">Портфолио</a>
+                        <a asp-controller="Home" asp-action="Reviews">Отзывы</a>
+                        <a asp-controller="Home" asp-action="Contacts">Контакты</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-lg-end">
+                    @if (!string.IsNullOrWhiteSpace(phoneLink))
+                    {
+                        <a href="tel:@phoneLink" class="footer-phone">
+                            @phone
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="Contacts" class="footer-phone">
+                            Контактная информация
+                        </a>
+                    }
+
+                    <p class="footer-description mt-2">
+                        Работаем для вашего комфорта
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 WoodHome. Все права защищены.</span>
+                <span>Комплексное строительство деревянных домов</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

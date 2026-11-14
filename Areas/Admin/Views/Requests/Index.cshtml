@@ -1,0 +1,183 @@
+
+@model IEnumerable<WoodHome.Domain.Entities.Request>
+
+@{
+    ViewData["Title"] = "Обращения";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5 admin-requests-page">
+
+    <div class="admin-requests-heading">
+        <div>
+            <span class="section-label">WOODHOME · АДМИНИСТРИРОВАНИЕ</span>
+            <h1 class="page-title">Обращения клиентов</h1>
+            <p>Заявки и сообщения, отправленные через форму обратной связи.</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           class="admin-request-back">
+            ← В админ-панель
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @{
+        var requests = Model.ToList();
+        var newCount = requests.Count(r => !r.IsProcessed);
+        var processedCount = requests.Count(r => r.IsProcessed);
+    }
+
+    <div class="admin-request-statistics">
+
+        <div class="admin-request-stat">
+            <span>Всего обращений</span>
+            <strong>@requests.Count</strong>
+        </div>
+
+        <div class="admin-request-stat">
+            <span>Новые</span>
+            <strong>@newCount</strong>
+        </div>
+
+        <div class="admin-request-stat">
+            <span>Обработанные</span>
+            <strong>@processedCount</strong>
+        </div>
+
+    </div>
+
+    @if (!requests.Any())
+    {
+        <div class="admin-requests-empty">
+            <h3>Обращений пока нет</h3>
+            <p>Когда посетители отправят сообщения через страницу контактов, они появятся здесь.</p>
+        </div>
+    }
+    else
+    {
+        <div class="admin-requests-list">
+
+            @foreach (var request in requests)
+            {
+                <div class="admin-request-card @(request.IsProcessed ? "is-processed" : "")">
+
+                    <div class="admin-request-card-header">
+
+                        <div>
+                            <h3>@request.ClientName</h3>
+
+                            <span class="admin-request-date">
+                                @request.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                            </span>
+                        </div>
+
+                        @if (request.IsProcessed)
+                        {
+                            <span class="admin-request-status processed">
+                                Обработано
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="admin-request-status new">
+                                Новое
+                            </span>
+                        }
+
+                    </div>
+
+                    <div class="admin-request-contacts">
+
+                        <div>
+                            <span>Телефон</span>
+                            <a href="tel:@request.Phone">@request.Phone</a>
+                        </div>
+
+                        <div>
+                            <span>Электронная почта</span>
+
+                            @if (!string.IsNullOrWhiteSpace(request.Email))
+                            {
+                                <a href="mailto:@request.Email">@request.Email</a>
+                            }
+                            else
+                            {
+                                <p>Не указана</p>
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="admin-request-message">
+                        <span>Сообщение клиента</span>
+
+                        @if (!string.IsNullOrWhiteSpace(request.Message))
+                        {
+                            <p>@request.Message</p>
+                        }
+                        else
+                        {
+                            <p class="admin-request-no-message">
+                                Клиент не оставил дополнительного сообщения.
+                            </p>
+                        }
+                    </div>
+
+                    <div class="admin-request-actions">
+
+                        <form asp-area="Admin"
+                              asp-controller="Requests"
+                              asp-action="ToggleProcessed"
+                              asp-route-id="@request.Id"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            @if (request.IsProcessed)
+                            {
+                                <button type="submit" class="admin-request-process">
+                                    Вернуть в новые
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="admin-request-process">
+                                    Отметить обработанным
+                                </button>
+                            }
+
+                        </form>
+
+                        <form asp-area="Admin"
+                              asp-controller="Requests"
+                              asp-action="Delete"
+                              asp-route-id="@request.Id"
+                              method="post"
+                              onsubmit="return confirm('Вы действительно хотите удалить это обращение?');">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="admin-request-delete">
+                                Удалить
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

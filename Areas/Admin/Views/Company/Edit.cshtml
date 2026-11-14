@@ -1,0 +1,72 @@
+@model WoodHome.Domain.Entities.CompanyInfo
+@{
+    ViewData["Title"] = "Редактирование страницы 'О компании'";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="auth-card">
+                <h3 class="mb-4">О компании</h3>
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ImagePath" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Название компании</label>
+                        <input asp-for="CompanyName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Краткое описание (для главной)</label>
+                        <input asp-for="ShortDescription" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Полное описание</label>
+                        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Миссия</label>
+                        <input asp-for="Mission" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Опыт (лет)</label>
+                        <input asp-for="ExperienceYears" type="number" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Адрес</label>
+                        <input asp-for="Address" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Текущее фото</label>
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <div><img src="@Model.ImagePath" style="max-height: 150px; border-radius: 10px;" /></div>
+                        }
+                        <input type="file" name="uploadedImage" class="form-control mt-2" accept="image/*" />
+                    </div>
+
+                    <button type="submit" class="btn-gold w-100">Сохранить изменения</button>
+                    <a href="/Admin/Dashboard" class="btn-outline-gold w-100 mt-2 d-block text-center">Назад в панель</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

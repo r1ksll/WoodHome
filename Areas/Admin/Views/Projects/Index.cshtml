@@ -1,0 +1,130 @@
+
+@model IEnumerable<WoodHome.Domain.Entities.Project>
+
+@{
+    ViewData["Title"] = "Управление портфолио";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <span class="section-label">АДМИНИСТРИРОВАНИЕ</span>
+            <h1 class="page-title mb-2">Портфолио</h1>
+            <p class="text-muted mb-0">Управление выполненными проектами компании</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Projects"
+           asp-action="Create"
+           class="gold-button">
+            + Добавить проект
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="admin-projects-grid">
+
+            @foreach (var project in Model)
+            {
+                <article class="admin-project-card">
+
+                    <div class="admin-project-photo">
+                        @if (!string.IsNullOrWhiteSpace(project.MainPhoto))
+                        {
+                            <img src="@project.MainPhoto" alt="@project.Title" />
+                        }
+                        else
+                        {
+                            <div class="admin-project-no-photo">
+                                WOODHOME
+                            </div>
+                        }
+
+                        @if (project.IsFeatured)
+                        {
+                            <span class="admin-project-featured">Избранное</span>
+                        }
+
+                        <span class="admin-project-status @(project.IsActive ? "active" : "inactive")">
+                            @(project.IsActive ? "Опубликован" : "Скрыт")
+                        </span>
+                    </div>
+
+                    <div class="admin-project-content">
+                        <h3>@project.Title</h3>
+
+                        @if (!string.IsNullOrWhiteSpace(project.ShortDescription))
+                        {
+                            <p>@project.ShortDescription</p>
+                        }
+
+                        <div class="admin-project-info">
+                            @if (!string.IsNullOrWhiteSpace(project.Area))
+                            {
+                                <span>Площадь: @project.Area</span>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(project.ConstructionTime))
+                            {
+                                <span>Срок: @project.ConstructionTime</span>
+                            }
+
+                    
+                        </div>
+
+                        <div class="admin-project-actions">
+                            <a asp-area="Admin"
+                               asp-controller="Projects"
+                               asp-action="Edit"
+                               asp-route-id="@project.Id"
+                               class="admin-project-edit">
+                                Редактировать
+                            </a>
+
+                            <form asp-area="Admin"
+                                  asp-controller="Projects"
+                                  asp-action="Delete"
+                                  asp-route-id="@project.Id"
+                                  method="post"
+                                  onsubmit="return confirm('Удалить этот проект и все его фотографии?');">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit" class="admin-project-delete">
+                                    Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="admin-projects-empty">
+            <h3>Портфолио пока пустое</h3>
+            <p>Добавьте первый проект, чтобы он появился на сайте.</p>
+
+            <a asp-area="Admin"
+               asp-controller="Projects"
+               asp-action="Create"
+               class="gold-button">
+                Добавить проект
+            </a>
+        </div>
+    }
+
+</div>
